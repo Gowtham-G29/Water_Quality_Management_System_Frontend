@@ -1,6 +1,6 @@
 import { Gauge } from "@mui/x-charts/Gauge";
 
-function TurbidityGauge() {
+function TurbidityGauge({value}) {
   return (
     <div className="flex justify-center items-center p-4">
       <div className="bg-white shadow-lg rounded-2xl p-6 w-full max-w-sm">
@@ -9,7 +9,7 @@ function TurbidityGauge() {
         </h2>
 
         <Gauge
-          value={12}
+          value={value||0}
           valueMin={0}
           valueMax={100}
           startAngle={-110}
