@@ -10,7 +10,7 @@ function App() {
   return (
     <Router>
       <TopBar />
-      <div className="pb-16 pt-16">
+      <div className="pb-16 pt-16 ">
         <Routes>
           <Route path="/" element={<DashBoard />} />
           <Route path="/warnings" element={<WarningLogs />} />
