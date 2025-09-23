@@ -17,7 +17,6 @@ function DashBoard() {
     const fetchData = async () => {
       try {
         const res = await axios.get("http://localhost:8080/api/sensor/latest");
-        console.log(res)
         setSensorData(res.data);
       } catch (err) {
         console.error(err);
@@ -25,7 +24,7 @@ function DashBoard() {
     };
 
     fetchData();
-    const interval = setInterval(fetchData, 1000); // every 3 sec
+    const interval = setInterval(fetchData, 1000); 
     return () => clearInterval(interval);
   }, []);
 
