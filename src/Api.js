@@ -65,3 +65,14 @@ export const updateAlertStatus = async (phoneNumber, alertStatus) => {
         return err;
     }
 }
+
+export const getAlertLogs= async (phoneNumber) => {
+    try {
+        const response = await axios.get(`${BASE_URL}/api/alert/alertLogs`, {
+            params: { phoneNumber }
+        }); 
+        return response;
+    } catch (err) {
+        return err;
+    }               
+};

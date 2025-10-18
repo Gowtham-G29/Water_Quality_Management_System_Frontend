@@ -1,70 +1,120 @@
-import { Card, CardContent, Typography, Box, Divider } from '@mui/material';
-import CallIcon from '@mui/icons-material/Call';
-import SmsIcon from '@mui/icons-material/Sms';
-import dayjs from 'dayjs'; // For formatting timestamp
+import { Card, CardContent, Typography, Box, Divider } from "@mui/material";
+import CallIcon from "@mui/icons-material/Call";
+import SmsIcon from "@mui/icons-material/Sms";
+import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
+import dayjs from "dayjs";
 
-export default function WarningLogsCard({ log }) {
-  const exampleLog = log || {
-    ph: 7.2,
-    tds: 350,
-    temperature: 28,
-    turbidity: 12,
-    timestamp: '2025-09-20 14:00',
-    emergencyCall: true,
-    smsSent: true,
-  };
+export default function WarningLogsCard({ warningLogs }) {
+  console.log("WarningLogsCard received warningLogs:", warningLogs);
 
-  // Format timestamp nicely
-  const formattedTime = dayjs(exampleLog.timestamp).format('MMM DD, YYYY - HH:mm');
+  if (!warningLogs || warningLogs.length === 0) {
+    return (
+      <div className="flex items-center justify-center w-full h-[30rem]">
+        <Typography
+          variant="h6"
+          className="text-gray-500 text-center font-medium"
+        >
+          No warning logs available.
+        </Typography>
+      </div>
+    );
+  }
 
   return (
-    <Card className="bg-white border rounded-2xl shadow-xl w-80 md:w-96 hover:shadow-2xl transition-shadow duration-300">
-      <CardContent className="flex flex-col gap-2 p-5">
-        {/* Title */}
-        <Typography variant="h6" className="font-semibold text-gray-800">
-          Warning Log
-        </Typography>
+    <div className="flex flex-wrap gap-6 justify-center p-4">
+      {warningLogs.map((logs) => {
+        const formattedTime = logs.createdAt
+          ? dayjs(logs.createdAt).format("MMM DD, YYYY - HH:mm")
+          : "Unknown Time";
 
-        {/* Readings */}
-        <Box className="flex justify-between text-sm text-gray-700 mt-1">
-          <div>pH: {exampleLog.ph}</div>
-          <div>TDS: {exampleLog.tds} ppm</div>
-        </Box>
-        <Box className="flex justify-between text-sm text-gray-700">
-          <div>Temp: {exampleLog.temperature} °C</div>
-          <div>Turbidity: {exampleLog.turbidity} NTU</div>
-        </Box>
+        return (
+          <div key={logs.id}>
+            <Card className="bg-white border border-gray-200 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 w-80 md:w-96 overflow-hidden">
+              {/* Header */}
+              <div className="flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-orange-400 text-white px-5 py-3">
+                <WarningAmberRoundedIcon />
+                <Typography variant="h6" className="font-semibold tracking-wide">
+                  Warning Log
+                </Typography>
+              </div>
 
-        <Typography
-          variant="caption"
-          className="text-gray-500 mt-2 bg-gray-50 px-2 py-1 rounded-md self-start"
-        >
-          {formattedTime}
-        </Typography>
+              {/* Card Body */}
+              <CardContent className="flex flex-col gap-3 p-5">
+                {/* Readings Section */}
+                <Box className="grid grid-cols-2 gap-y-2 text-sm text-gray-700">
+                  <div>
+                    <span className="font-semibold text-gray-800">pH:</span>{" "}
+                    {logs.ph}
+                  </div>
+                  <div>
+                    <span className="font-semibold text-gray-800">TDS:</span>{" "}
+                    {logs.tds} ppm
+                  </div>
+                  <div>
+                    <span className="font-semibold text-gray-800">Temp:</span>{" "}
+                    {logs.temperature} °C
+                  </div>
+                  <div>
+                    <span className="font-semibold text-gray-800">
+                      Turbidity:
+                    </span>{" "}
+                    {logs.turbidity} NTU
+                  </div>
+                </Box>
 
-        <Divider className="my-3" />
+                {/* Time */}
+                <Typography
+                  variant="caption"
+                  className="text-gray-500 mt-3 bg-gray-100 px-3 py-1 rounded-lg self-start"
+                >
+                  {formattedTime}
+                </Typography>
 
-        <Box className="flex justify-between items-center">
-          <Box className="flex items-center gap-2">
-            <CallIcon
-              fontSize="small"
-              className={exampleLog.emergencyCall ? 'text-red-500' : 'text-gray-300'}
-            />
-            <Typography variant="caption" className="text-gray-700">
-              {exampleLog.emergencyCall ? 'Call Sent' : 'No Call'}
-            </Typography>
-          </Box>
-          <Box className="flex items-center gap-2">
-            <SmsIcon
-              fontSize="small"
-              className={exampleLog.smsSent ? 'text-green-500' : 'text-gray-300'}
-            />
-            <Typography variant="caption" className="text-gray-700">
-              {exampleLog.smsSent ? 'SMS Sent' : 'No SMS'}
-            </Typography>
-          </Box>
-        </Box>
-      </CardContent>
-    </Card>
+                <Divider className="my-3" />
+
+                {/* Status Section */}
+                <Box className="flex justify-between items-center">
+                  <Box className="flex items-center gap-2">
+                    <div
+                      className={`p-2 rounded-full ${
+                        !logs.emergencyCall
+                          ? "bg-green-100 text-green-600"
+                          : "bg-red-100 text-red-500"
+                      }`}
+                    >
+                      <CallIcon fontSize="small" />
+                    </div>
+                    <Typography
+                      variant="body2"
+                      className="text-gray-700 font-medium"
+                    >
+                      {!logs.emergencyCall ? "Call Sent" : "No Call"}
+                    </Typography>
+                  </Box>
+
+                  <Box className="flex items-center gap-2">
+                    <div
+                      className={`p-2 rounded-full ${
+                        !logs.smsSent
+                          ? "bg-green-100 text-green-600"
+                          : "bg-red-100 text-red-500"
+                      }`}
+                    >
+                      <SmsIcon fontSize="small" />
+                    </div>
+                    <Typography
+                      variant="body2"
+                      className="text-gray-700 font-medium"
+                    >
+                      {!logs.smsSent ? "SMS Sent" : "No SMS"}
+                    </Typography>
+                  </Box>
+                </Box>
+              </CardContent>
+            </Card>
+          </div>
+        );
+      })}
+    </div>
   );
 }
